@@ -1,0 +1,94 @@
+1st solution and 2nd Solution :-- 
+#include<iostream>
+#include<climits>
+#include<algorithm>
+using namespace std;
+class Node{
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node(int value){
+        val = value;
+        left = right = NULL;
+    }
+};
+void display(Node* root){
+    if(root==NULL) return;
+    cout<<root->val<<" ";
+    display(root->left);
+    display(root->right);
+}
+int product(Node* root){
+    if(root==NULL) return 1;
+    int lp = product(root->left);
+    int rp = product(root->right);
+    int ans = (root->val)*lp*rp;
+    return ans;
+}
+int mini(Node* root){
+    if(root==NULL) return INT_MAX;
+    int lm = mini(root->left);
+    int rm = mini(root->right);
+    int ans = min(root->val,min(lm,rm));
+    return ans;
+}
+int main(){
+    Node* a = new Node(1);
+    Node* b = new Node(-2);
+    Node* c = new Node(3);
+    Node* d = new Node(4);
+    Node* e = new Node(5);
+    a->left = b;
+    a->right = c;
+    b->left = d;
+    b->right = e;
+    display(a);
+    //cout<<product(a);
+    cout<<endl;
+    cout<<mini(a);
+}
+
+
+4th solution:--
+class Solution {
+public:
+    bool helper(TreeNode* temp1,TreeNode* temp2){
+        if(!temp1 and !temp2) return true;
+        if(!temp1 or !temp2) return false;
+        if(temp1->val==temp2->val and helper(temp1->left,temp2->right) and helper(temp1->right,temp2->left)) return true;
+        else return false;
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root==NULL) return true;
+        TreeNode* temp1 = root->left;
+        TreeNode* temp2 = root->right;
+        return helper(temp1,temp2);
+    }
+};
+
+
+3rd Solutin:--
+class Solution {
+public:
+    int  helper(TreeNode* root){
+        if(root==NULL) return 0;
+        int ll = helper(root->left);
+        int rl = helper(root->right);
+        int fl = (1 + max(ll,rl));
+        return fl;
+    }
+    bool isBalanced(TreeNode* root) {
+        if(root==NULL) return true;
+        TreeNode* temp1 = root->left;
+        TreeNode* temp2 = root->right;
+        int ll = helper(temp1);
+        int rl = helper(temp2);
+        if(abs(ll-rl)>1) return false;
+        bool la = isBalanced(root->left);
+        if(!la) return false;
+        bool ra = isBalanced(root->right);
+        if(!ra) return false;
+        return true;
+    }
+};
